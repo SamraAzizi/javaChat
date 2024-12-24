@@ -4,6 +4,7 @@ public class Server implements Runnable{
 
     private ServerSocket server;
     private boolean done;
+    private ExecutorService pool;
 
     public Server(){
         connections = new ArrayList<>();
@@ -19,15 +20,15 @@ public class Server implements Runnable{
 
         
             server = new ServerSocket(9999);
+            pool = executors.newCatchedThreadPool();
             while(!done){
-
-            
                 Socket cline = server.accept();
                 ConnectionHandler handler = new ConnectionHandler(client);
-
                 connections.add(handler);
+                pool.execute(handler);
             }
         }catch (IOException e){
+            shutdown();
             
             }
 
@@ -98,6 +99,8 @@ public class Server implements Runnable{
                         }
                         
                     }else if(message.startWith("/quit")){
+                        broadcast(nickename+ "left the chat!");
+                        shutdown()
 
                     }else{
                         broadcast(nickname+ ": "+ message)
@@ -123,9 +126,14 @@ public class Server implements Runnable{
                 client.close()
             }
         }catch(IOException e){
+            shutdown();
 
         }
         }
+    }
+    public static void main(String[] args){
+        Server server = new Server();
+        server.run();
     }
 }
 
