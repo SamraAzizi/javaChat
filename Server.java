@@ -2,6 +2,14 @@ public class Server implements Runnable{
 
     private ArrayList<ConnectionHandler> connections;
 
+    private ServerSocket server;
+    private boolean done;
+
+    public Server(){
+        connections = new ArrayList<>();
+        done = false;
+    }
+
 
 
 
@@ -10,11 +18,15 @@ public class Server implements Runnable{
         try{
 
         
-        ServerSocket server = new ServerSocket(9999);
-        Socket cline = server.accept();
-        ConnectionHandler handler = new ConnectionHandler(client);
+            server = new ServerSocket(9999);
+            while(!done){
 
-        connections.add(handler);
+            
+                Socket cline = server.accept();
+                ConnectionHandler handler = new ConnectionHandler(client);
+
+                connections.add(handler);
+            }
         }catch (IOException e){
             
             }
@@ -29,6 +41,24 @@ public class Server implements Runnable{
             }
 
         }
+    }
+
+    public void shutdown(){
+        try{
+
+        
+            done = true;
+            if(!server.isClosed()){
+                server.close();
+        }
+        for(ConnectionHandler ch: connections){
+            ch.shutdown
+        }
+
+        }catch(IOException e){
+
+        }
+
     }
 
     class ConnectionHandler implements Runnable{
@@ -62,6 +92,9 @@ public class Server implements Runnable{
                             broadcast(nickname + " renamed themselver to "+messageSplit[1])
                             System.out.println(nickname + " renamed themselver to "+messageSplit[1])
                             nickname = messageSplit[1]
+                            out.println("Successfully changed nickename to "+ nickname)
+                        }else{
+                            out.println("No nickname provided")
                         }
                         
                     }else if(message.startWith("/quit")){
@@ -79,6 +112,19 @@ public class Server implements Runnable{
 
         public void sendMessage(String message){
             out.println(message);
+        }
+        public void shutdown(){
+            try{
+
+            
+            in.close();
+            out.close()
+            if(!client.isClosed()){
+                client.close()
+            }
+        }catch(IOException e){
+
+        }
         }
     }
 }
