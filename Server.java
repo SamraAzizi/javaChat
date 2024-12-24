@@ -57,6 +57,12 @@ public class Server implements Runnable{
                 String message;
                 while ((message = in.readLine()) != null){
                     if(message.startWith("/nick ")){
+                        String[] messageSplit = message.split(" ", 2);
+                        if(messageSplit.length == 2){
+                            broadcast(nickname + " renamed themselver to "+messageSplit[1])
+                            System.out.println(nickname + " renamed themselver to "+messageSplit[1])
+                            nickname = messageSplit[1]
+                        }
                         
                     }else if(message.startWith("/quit")){
 
