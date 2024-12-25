@@ -17,13 +17,18 @@ public class Client implements Runnable{
             out = new PrintWriter(client.getOutputStream(),true);
             in = new BufferedReader((new InputStreamReader((client.getInputStream()))));
 
+            InputHandler inHandler = new InputHandler();
+            Thread t = new Thread(inHandler);
+            t.start();
+
+            String inMessage;
+            while((inMessage = in.readLine()) != null){
+                System.out.println(inMessage);
+
+            }
         }catch(IOException e){
-
-            
-
+            shutdown();
         }
-
-    
 }
 
     public void shutdown(){
@@ -60,10 +65,17 @@ public class Client implements Runnable{
 
                 }
             }catch(IOException e){
-                //TODO
+                shutdown();
 
             }
         }
         
     }
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.run();
+
+        
+    }
+
 }
