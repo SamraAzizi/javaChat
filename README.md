@@ -53,19 +53,6 @@ This project is a simple multi-client chat application implemented in Java using
   - `/nick [new nickname]`: Change your nickname.
   - `/quit`: Leave the chat.
 
-## Known Issues
-1. The `connections` list in `Server` is not thread-safe and may lead to concurrency issues.
-2. Exceptions are not consistently logged or displayed.
 
-## Enhancements
-- Use a thread-safe collection like `CopyOnWriteArrayList` for `connections` in `Server`.
-- Improve error handling and logging for better debugging.
-- Add encryption for secure communication.
-- Implement a graphical user interface (GUI) for the client.
-
-## License
-This project is free to use and modify. No license restrictions.
-
----
 
 Happy chatting!
